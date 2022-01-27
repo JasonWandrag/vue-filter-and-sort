@@ -3,14 +3,14 @@
     <div class="sortBar">
       <label>
         Sort Age:
-        <select v-model="ageSort" @change="sortAge(ageSort)">
+        <select v-model="age" @change="sortAge(age)">
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
       </label>
       <label>
         Sort Name:
-        <select v-model="nameSort" @change="sortName(nameSort)">
+        <select v-model="name" @change="sortName(name)">
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
@@ -44,15 +44,19 @@ import Card from "./components/Card.vue";
 export default {
   name: "App",
   components: { Card },
+  // In the data, people keeps the original array,
+  // and filteredPeople is what is used for display.
+  // The rest is used for v-model binding
   data() {
     return {
       people: null,
       filteredPeople: null,
-      ageSort: "",
-      nameSort: "",
+      age: "",
+      name: "",
       gender: "",
     };
   },
+  // Get information from API and write it to data
   mounted() {
     fetch("https://randomuser.me/api/?results=100")
       .then((res) => res.json())
@@ -63,6 +67,9 @@ export default {
       .catch((err) => console.log(err));
   },
   methods: {
+    // Sorting methods sort the filteredPeople
+    // Filter methods check for all results in the people array, and writes the results to filteredPeople
+    // This ensures that when sorting by age or name, you are still applying any filters
     sortAge(dir) {
       this.filteredPeople = this.filteredPeople.sort(
         (a, b) => a.dob.age - b.dob.age
